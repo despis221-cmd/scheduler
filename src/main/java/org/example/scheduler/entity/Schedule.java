@@ -45,4 +45,10 @@ public class Schedule {
         this.creator = requestDto.getCreator();
         this.password = requestDto.getPassword();
     }
+
+    // 일정 제목, 작성자명 수정
+    public void update(String title, String creator) {
+        this.title = title;
+        this.creator = creator;
+    }
 }

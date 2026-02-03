@@ -34,4 +34,10 @@ public class ScheduleController {
     public ScheduleResponseDto getSchedule(@PathVariable Long id) {
         return scheduleService.getSchedule(id);
     }
+
+    // 일정 수정 API
+    @PatchMapping("/schedules/{id}")
+    public ScheduleResponseDto updateSchedule(@PathVariable Long id, @RequestBody ScheduleRequestDto requestDto) {
+        return scheduleService.updateSchedule(id, requestDto);
+    }
 }
