@@ -1,8 +1,12 @@
 package org.example.scheduler.service;
 
+import lombok.RequiredArgsConstructor;
+import org.example.scheduler.dto.CommentResponseDto;
 import org.example.scheduler.dto.ScheduleRequestDto;
 import org.example.scheduler.dto.ScheduleResponseDto;
+import org.example.scheduler.entity.Comment;
 import org.example.scheduler.entity.Schedule;
+import org.example.scheduler.repository.CommentRepository;
 import org.example.scheduler.repository.ScheduleRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,14 +14,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
-
-    // Repository 의존성 주입
-    public ScheduleService(ScheduleRepository scheduleRepository) {
-        this.scheduleRepository = scheduleRepository;
-    }
+    private final CommentRepository commentRepository;
 
     // 일정 생성 요청 처리
     public ScheduleResponseDto saveSchedule(ScheduleRequestDto requestDto) {
@@ -38,11 +39,16 @@ public class ScheduleService {
     }
 
     // 선택 일정 조회 요청 처리
+    @Transactional(readOnly = true)
     public ScheduleResponseDto getSchedule(Long id) {
         Schedule schedule = scheduleRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("선택한 일정이 존재하지 않습니다.") // 예외
         );
-        return new ScheduleResponseDto(schedule);
+        List<Comment> commentList = commentRepository.findAllByScheduleIdOrderByCreatedAtDesc(id);
+        List<CommentResponseDto> commentDtoList = commentList.stream()
+                .map(CommentResponseDto::new)
+                .toList();
+        return new ScheduleResponseDto(schedule, commentDtoList);
     }
 
     // 일정 수정 요청 처리
