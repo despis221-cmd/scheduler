@@ -24,16 +24,22 @@ public class ScheduleService {
         return new ScheduleResponseDto(savedSchedule); // 저장된 엔티티 DTO로 변환하여 반환
     }
 
-    // 전체 일정 혹은 특정 작성자 전체 일정
+    // 전체 일정 혹은 특정 작성자 전체 일정 조회 요청 처리
     public List<ScheduleResponseDto> getSchedules(String creator) {
         List<Schedule> scheduleList;
-
         if (creator == null) {
             scheduleList = scheduleRepository.findAllByOrderByModifiedAtDesc();
         } else {
             scheduleList = scheduleRepository.findAllByCreatorOrderByModifiedAtDesc(creator);
         }
-
         return scheduleList.stream().map(ScheduleResponseDto::new).toList();
+    }
+
+    // 선택 일정 조회 요청 처리
+    public ScheduleResponseDto getSchedule(Long id) {
+        Schedule schedule = scheduleRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("선택한 일정이 존재하지 않습니다.") // 예외
+        );
+        return new ScheduleResponseDto(schedule);
     }
 }

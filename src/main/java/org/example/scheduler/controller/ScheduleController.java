@@ -16,16 +16,22 @@ public class ScheduleController {
         this.scheduleService = scheduleService;
     }
 
-    // 일정 생성 요청 처리
+    // 일정 생성 API
     @PostMapping("/schedules")
     public ScheduleResponseDto createSchedule(@RequestBody ScheduleRequestDto requestDto) {
 
         return scheduleService.saveSchedule(requestDto);
     }
 
-    // 일정 조회 요청 처리
+    // 전체 일정 조회 API
     @GetMapping("/schedules")
     public List<ScheduleResponseDto> getSchedules(@RequestParam(required = false) String creator) {
         return scheduleService.getSchedules(creator);
+    }
+
+    // 선택 일정 조회 API
+    @GetMapping("/schedules/{id}")
+    public ScheduleResponseDto getSchedule(@PathVariable Long id) {
+        return scheduleService.getSchedule(id);
     }
 }
