@@ -5,6 +5,7 @@ import org.example.scheduler.dto.ScheduleResponseDto;
 import org.example.scheduler.entity.Schedule;
 import org.example.scheduler.repository.ScheduleRepository;
 import org.springframework.stereotype.Service;
+import java.util.List;
 
 @Service
 public class ScheduleService {
@@ -21,5 +22,18 @@ public class ScheduleService {
         Schedule schedule = new Schedule(requestDto); // 엔티티 객체 생성
         Schedule savedSchedule = scheduleRepository.save(schedule); // DB에 엔티티 저장
         return new ScheduleResponseDto(savedSchedule); // 저장된 엔티티 DTO로 변환하여 반환
+    }
+
+    // 전체 일정 혹은 특정 작성자 전체 일정
+    public List<ScheduleResponseDto> getSchedules(String creator) {
+        List<Schedule> scheduleList;
+
+        if (creator == null) {
+            scheduleList = scheduleRepository.findAllByOrderByModifiedAtDesc();
+        } else {
+            scheduleList = scheduleRepository.findAllByCreatorOrderByModifiedAtDesc(creator);
+        }
+
+        return scheduleList.stream().map(ScheduleResponseDto::new).toList();
     }
 }
