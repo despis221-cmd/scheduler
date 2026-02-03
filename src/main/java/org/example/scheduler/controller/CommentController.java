@@ -1,5 +1,6 @@
 package org.example.scheduler.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.scheduler.dto.CommentRequestDto;
 import org.example.scheduler.dto.CommentResponseDto;
@@ -15,7 +16,7 @@ public class CommentController {
 
     // 댓글 작성 API
     @PostMapping("/{scheduleId}/comments")
-    public CommentResponseDto createComment(@PathVariable Long scheduleId, @RequestBody CommentRequestDto requestDto) {
+    public CommentResponseDto createComment(@PathVariable Long scheduleId, @Valid @RequestBody CommentRequestDto requestDto) {
         return commentService.createComment(scheduleId, requestDto);
     }
 }
