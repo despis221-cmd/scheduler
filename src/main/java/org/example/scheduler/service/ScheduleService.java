@@ -59,4 +59,19 @@ public class ScheduleService {
         schedule.update(requestDto.getTitle(), requestDto.getCreator());
         return new ScheduleResponseDto(schedule);
     }
+
+    // 일정 삭제 요청 처리
+    public String deleteSchedule(Long id, String password) {
+        Schedule schedule = scheduleRepository.findById(id).orElseThrow( // ID 확인
+                () -> new IllegalArgumentException("선택한 일정이 존재하지 않습니다.")
+        );
+
+        if (!schedule.getPassword().equals(password)) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다."); // 비밀번호 일치 확인
+        }
+
+        String title = schedule.getTitle();
+        scheduleRepository.delete(schedule);
+        return title;
+    }
 }

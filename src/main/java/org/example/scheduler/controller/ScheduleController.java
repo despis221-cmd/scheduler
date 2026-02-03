@@ -40,4 +40,11 @@ public class ScheduleController {
     public ScheduleResponseDto updateSchedule(@PathVariable Long id, @RequestBody ScheduleRequestDto requestDto) {
         return scheduleService.updateSchedule(id, requestDto);
     }
+
+    // 일정 삭제 API
+    @DeleteMapping("/schedules/{id}")
+    public String deleteSchedule(@PathVariable Long id, @RequestBody ScheduleRequestDto requestDto) {
+        String title = scheduleService.deleteSchedule(id, requestDto.getPassword());
+        return title + "이(가) 삭제되었습니다.";
+    }
 }
