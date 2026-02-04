@@ -5,6 +5,8 @@ import org.example.scheduler.dto.ScheduleRequestDto;
 import org.example.scheduler.dto.ScheduleResponseDto;
 import org.example.scheduler.dto.ScheduleUpdateDto;
 import org.example.scheduler.service.ScheduleService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -17,9 +19,9 @@ public class ScheduleController {
 
     // 일정 생성 API
     @PostMapping
-    public ScheduleResponseDto createSchedule(@RequestBody ScheduleRequestDto requestDto) {
-
-        return scheduleService.saveSchedule(requestDto);
+    public ResponseEntity<ScheduleResponseDto> createSchedule(@RequestBody ScheduleRequestDto requestDto) {
+        ScheduleResponseDto responseDto = scheduleService.saveSchedule(requestDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
     // 전체 일정 조회 API

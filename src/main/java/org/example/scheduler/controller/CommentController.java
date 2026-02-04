@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.example.scheduler.dto.CommentRequestDto;
 import org.example.scheduler.dto.CommentResponseDto;
 import org.example.scheduler.service.CommentService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,7 +17,8 @@ public class CommentController {
 
     // 댓글 작성 API
     @PostMapping("/{scheduleId}/comments")
-    public CommentResponseDto createComment(@PathVariable Long scheduleId, @RequestBody CommentRequestDto requestDto) {
-        return commentService.createComment(scheduleId, requestDto);
+    public ResponseEntity<CommentResponseDto> createComment(@PathVariable Long scheduleId, @RequestBody CommentRequestDto requestDto) {
+        CommentResponseDto responseDto = commentService.createComment(scheduleId, requestDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 }
