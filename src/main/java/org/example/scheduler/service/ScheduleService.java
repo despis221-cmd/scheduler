@@ -1,9 +1,11 @@
 package org.example.scheduler.service;
 
 import lombok.RequiredArgsConstructor;
+import org.example.scheduler.check.ScheduleCheck;
 import org.example.scheduler.dto.CommentResponseDto;
 import org.example.scheduler.dto.ScheduleRequestDto;
 import org.example.scheduler.dto.ScheduleResponseDto;
+import org.example.scheduler.dto.ScheduleUpdateDto;
 import org.example.scheduler.entity.Comment;
 import org.example.scheduler.entity.Schedule;
 import org.example.scheduler.repository.CommentRepository;
@@ -19,9 +21,11 @@ public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
     private final CommentRepository commentRepository;
+    private final ScheduleCheck scheduleCheck = new ScheduleCheck();
 
     // 일정 생성 요청 처리
     public ScheduleResponseDto saveSchedule(ScheduleRequestDto requestDto) {
+        scheduleCheck.checkCreate(requestDto);
         Schedule schedule = new Schedule(requestDto); // 엔티티 객체 생성
         Schedule savedSchedule = scheduleRepository.save(schedule); // DB에 엔티티 저장
         return new ScheduleResponseDto(savedSchedule); // 저장된 엔티티 DTO로 변환하여 반환
@@ -53,21 +57,23 @@ public class ScheduleService {
 
     // 일정 수정 요청 처리
     @Transactional
-    public ScheduleResponseDto updateSchedule(Long id, ScheduleRequestDto requestDto) {
+    public ScheduleResponseDto updateSchedule(Long id, ScheduleUpdateDto updateDto) {
+        scheduleCheck.checkUpdate(updateDto);
         Schedule schedule = scheduleRepository.findById(id).orElseThrow(  // ID 확인
                 () -> new IllegalArgumentException("선택한 일정이 존재하지 않습니다.")
         );
 
-        if (!schedule.getPassword().equals(requestDto.getPassword())) { // 비밀번호 일치 확인
+        if (!schedule.getPassword().equals(updateDto.getPassword())) { // 비밀번호 일치 확인
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
 
-        schedule.update(requestDto.getTitle(), requestDto.getCreator());
+        schedule.update(updateDto.getTitle(), updateDto.getCreator());
         return new ScheduleResponseDto(schedule);
     }
 
     // 일정 삭제 요청 처리
     public String deleteSchedule(Long id, String password) {
+        scheduleCheck.checkPassword(password);
         Schedule schedule = scheduleRepository.findById(id).orElseThrow( // ID 확인
                 () -> new IllegalArgumentException("선택한 일정이 존재하지 않습니다.")
         );
