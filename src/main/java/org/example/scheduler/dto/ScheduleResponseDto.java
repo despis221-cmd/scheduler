@@ -17,7 +17,6 @@ public class ScheduleResponseDto {
     private LocalDateTime modifiedAt;
     private List<CommentResponseDto> comments;
 
-    // 엔티티 받아 응답 DTO로 변환 (비밀번호 제외)
     public ScheduleResponseDto(Schedule schedule) {
         this.id = schedule.getId();
         this.title = schedule.getTitle();

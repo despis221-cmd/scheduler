@@ -12,28 +12,30 @@ import java.util.Map;
 @RestControllerAdvice(basePackages = "org.example.scheduler")
 public class ExceptionsHandler {
 
+    private static final String ERROR_KEY = "error";
+
     // 404 Not Found
     @ExceptionHandler(ScheduleNotFoundException.class)
     public ResponseEntity<Map<String, String>> handleScheduleNotFoundException(ScheduleNotFoundException ex) {
-        Map<String, String> errors = new HashMap<>();
-        errors.put("error", ex.getMessage());
-        return new ResponseEntity<>(errors, HttpStatus.NOT_FOUND);
+        return buildErrorResponse(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     // 401 Unauthorized
     @ExceptionHandler(InvalidPasswordException.class)
     public ResponseEntity<Map<String, String>> handleInvalidPasswordException(InvalidPasswordException ex) {
-        Map<String, String> errors = new HashMap<>();
-        errors.put("error", ex.getMessage());
-        return new ResponseEntity<>(errors, HttpStatus.UNAUTHORIZED);
+        return buildErrorResponse(ex.getMessage(), HttpStatus.UNAUTHORIZED);
     }
 
     // 400 Bad Request
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Map<String, String>> handleIllegalArgumentException(IllegalArgumentException ex) {
+        return buildErrorResponse(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    private ResponseEntity<Map<String, String>> buildErrorResponse(String message, HttpStatus status) {
         Map<String, String> errors = new HashMap<>();
-        errors.put("error", ex.getMessage());
-        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+        errors.put(ERROR_KEY, message);
+        return new ResponseEntity<>(errors, status);
     }
 
 }

@@ -44,8 +44,8 @@ public class ScheduleController {
 
     // 일정 삭제 API
     @DeleteMapping("/{scheduleId}")
-    public ResponseEntity<String> deleteSchedule(@PathVariable Long scheduleId, @RequestBody ScheduleRequestDto requestDto) {
-        String title = scheduleService.deleteSchedule(scheduleId, requestDto.getPassword());
+    public ResponseEntity<String> deleteSchedule(@PathVariable Long scheduleId,  @RequestHeader("X-Schedule-Password") String password) {
+        String title = scheduleService.deleteSchedule(scheduleId, password);
         return ResponseEntity.ok(title + "이(가) 삭제되었습니다.");
     }
 }
