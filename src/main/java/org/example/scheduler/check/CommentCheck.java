@@ -1,7 +1,9 @@
 package org.example.scheduler.check;
 
 import org.example.scheduler.dto.CommentRequestDto;
+import org.springframework.stereotype.Component;
 
+@Component
 public class CommentCheck {
     public void checkCreate(CommentRequestDto dto) {
         if (dto.getContent() == null || dto.getContent().isBlank()) {

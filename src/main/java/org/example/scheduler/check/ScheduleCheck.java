@@ -2,7 +2,9 @@ package org.example.scheduler.check;
 
 import org.example.scheduler.dto.ScheduleRequestDto;
 import org.example.scheduler.dto.ScheduleUpdateDto;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ScheduleCheck {
     public void checkCreate(ScheduleRequestDto dto) {
         if (dto.getTitle() == null || dto.getTitle().isBlank()) {
@@ -34,9 +36,6 @@ public class ScheduleCheck {
         }
         if (dto.getCreator() == null || dto.getCreator().isBlank()) {
             throw new IllegalArgumentException("작성자명은 필수입니다.");
-        }
-        if (dto.getPassword() == null || dto.getPassword().isBlank()) {
-            throw new IllegalArgumentException("비밀번호는 필수입니다.");
         }
     }
 

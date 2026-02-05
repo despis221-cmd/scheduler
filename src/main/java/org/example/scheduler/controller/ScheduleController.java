@@ -26,26 +26,26 @@ public class ScheduleController {
 
     // 전체 일정 조회 API
     @GetMapping
-    public List<ScheduleResponseDto> getSchedules(@RequestParam(required = false) String creator) {
-        return scheduleService.getSchedules(creator);
+    public ResponseEntity<List<ScheduleResponseDto>> getSchedules(@RequestParam(required = false) String creator) {
+        return ResponseEntity.ok(scheduleService.getSchedules(creator));
     }
 
     // 선택 일정 조회 API
     @GetMapping("/{scheduleId}")
-    public ScheduleResponseDto getSchedule(@PathVariable Long scheduleId) {
-        return scheduleService.getSchedule(scheduleId);
+    public ResponseEntity<ScheduleResponseDto> getSchedule(@PathVariable Long scheduleId) {
+        return ResponseEntity.ok(scheduleService.getSchedule(scheduleId));
     }
 
     // 일정 수정 API
     @PatchMapping("/{scheduleId}")
-    public ScheduleResponseDto updateSchedule(@PathVariable Long scheduleId, @RequestBody ScheduleUpdateDto updateDto) {
-        return scheduleService.updateSchedule(scheduleId, updateDto);
+    public ResponseEntity<ScheduleResponseDto> updateSchedule(@PathVariable Long scheduleId, @RequestBody ScheduleUpdateDto updateDto, @RequestHeader("X-Schedule-Password") String password) {
+        return ResponseEntity.ok(scheduleService.updateSchedule(scheduleId, updateDto, password));
     }
 
     // 일정 삭제 API
     @DeleteMapping("/{scheduleId}")
-    public String deleteSchedule(@PathVariable Long scheduleId, @RequestBody ScheduleRequestDto requestDto) {
+    public ResponseEntity<String> deleteSchedule(@PathVariable Long scheduleId, @RequestBody ScheduleRequestDto requestDto) {
         String title = scheduleService.deleteSchedule(scheduleId, requestDto.getPassword());
-        return title + "이(가) 삭제되었습니다.";
+        return ResponseEntity.ok(title + "이(가) 삭제되었습니다.");
     }
 }

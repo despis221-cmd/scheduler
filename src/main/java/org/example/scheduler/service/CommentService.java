@@ -16,7 +16,7 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
     private final ScheduleRepository scheduleRepository; // 일정 확인
-    private final CommentCheck commentCheck = new CommentCheck();
+    private final CommentCheck commentCheck;
 
     // 댓글 생성 요청 처리
     @Transactional
